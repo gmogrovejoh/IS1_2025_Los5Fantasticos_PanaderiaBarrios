@@ -25,7 +25,7 @@ El proyecto utiliza una estrategia básica de control de versiones:
 ## Instalación y Configuración Inicial
 1.  Primero descarguen git y abran git bash que estará en el escritorio, una vez instalado git, ponen en gitbash:
    git config --global user.name "Nombre Completo"
-luego ponene git config --global user.email "correo@unjbg.edu.pe" pongan su nombre en nombre completo y su correo a lo que están asociados a Github
+luego ponen el comando git config --global user.email "correo@unjbg.edu.pe" pongan su nombre completo y su correo a lo que están asociados a Github
 Finalmente git config --list donde podrán ver si su nombre y correo se guardaron correctamente.
 2. Clonar el repositorio: Pongan el siguiente comando y verán que abra creado una carpeta con ese nombre en su computadora(Busquenlo, no recuerdo donde se guardaba por default)
    git clone https://github.com/gmogrovejoh/IS1_2025_Los5Fantasticos_PanaderiaBarrios.git
@@ -46,4 +46,4 @@ git checkout develop (como se nos indicó en la práctica debemos de realizar lo
 git add .
 git commit -m "" Para ponerle nombre al cambio que realizaron especificando brevemente lo que hicieron
 git push -u origin develop (para realizar el cambio en develop)
-Finalmente entren al repositorio Github para ver si los cambios que realizaron estén en el repositorio.
+Finalmente entren al repositorio Github para ver si los cambios que realizaron estén en el repositorio
