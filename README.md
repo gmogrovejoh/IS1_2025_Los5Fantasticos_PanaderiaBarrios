@@ -27,8 +27,7 @@ El proyecto utiliza una estrategia básica de control de versiones:
    git config --global user.name "Nombre Completo"
 luego ponene git config --global user.email "correo@unjbg.edu.pe" pongan su nombre en nombre completo y su correo a lo que están asociados a Github
 Finalmente git config --list donde podrán ver si su nombre y correo se guardaron correctamente.
-2. Clonar el repositorio: Pongan el siguiente comando y verán que abra creado una carpeta con ese nombre en su computadora(Busquenlo, no recuerdo donde se guardaba por default)
-   git clone https://github.com/gmogrovejoh/IS1_2025_Los5Fantasticos_PanaderiaBarrios.git
+2. Clonar el repositorio: Pongan el siguiente comando git clone https://github.com/gmogrovejoh/IS1_2025_Los5Fantasticos_PanaderiaBarrios.gity verán que habrá creado una carpeta con ese nombre en su computadora(Búsquenlo, no recuerdo donde se guardaba por default)
    Aquí creo que era poner git bash en la carpeta una vez localizada.
 3. Ponen el siguiente comando: cd IS1_2025_Los5Fantasticos_PanaderiaBarrios
 4. Descarguen composer aquí https://getcomposer.org/ (Por default dejen que se descargue en xaamp si ven que está ahí no lo muevan, si no tienen
