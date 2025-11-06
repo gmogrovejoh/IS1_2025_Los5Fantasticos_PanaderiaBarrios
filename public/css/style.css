@@ -1,0 +1,191 @@
+/* Estilos personalizados para Panadería Barrios */
+
+:root {
+    --primary-color: #8B4513;
+    --secondary-color: #D2691E;
+    --accent-color: #F4A460;
+    --text-color: #333;
+    --light-bg: #FFF8DC;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="3" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+    animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Cards */
+.producto-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.producto-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.categoria-card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.categoria-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    background: var(--light-bg);
+}
+
+/* Botones */
+.btn-primary {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+}
+
+/* Navbar */
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: var(--accent-color) !important;
+}
+
+/* Footer */
+footer {
+    background: linear-gradient(135deg, #2c3e50, #34495e) !important;
+}
+
+/* Carrito */
+.cantidad-btn {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cantidad-input {
+    width: 60px;
+    height: 35px;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 3rem 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .cantidad-input {
+        width: 50px;
+    }
+}
+
+/* Loading */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Alerts personalizados */
+.alert {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.alert-success {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+}
+
+.alert-danger {
+    background: linear-gradient(45deg, #dc3545, #e74c3c);
+    color: white;
+}
+
+/* Badges */
+.badge {
+    font-size: 0.75rem;
+    padding: 0.5em 0.75em;
+}
+
+/* Inputs */
+.form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(210, 105, 30, 0.25);
+}
+
+/* Tablas */
+.table {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+}
