@@ -35,10 +35,10 @@ Finalmente git config --list donde podrán ver si su nombre y correo se guardaro
 xaamp descarguenlo antes de descargar composer).
 5. Luego de descargarlo cierren gitbash y vuelvanlo a abrir y pongan en gitbash: composer install, si les salen mensaje para poner yes o no
 vean el doc de la práctica09 que realicé, en una captura sale lo que marqué(es necesario solo si les sale).
-6.Crean el archivo .env en la raíz de su carpeta de proyecto local. Este archivo contiene el usuario, contraseña, y nombre de la BD local de su propia máquina. Como está en el .gitignore, nunca se subirá al repositorio. (no recuerdo si esto se hacia por default o lo tenian que hacer ustedes)
-7.Antes de que puedan ejecutar el código, la base de datos debe existir en su servidor local (MySQL).
+6. Crean el archivo .env en la raíz de su carpeta de proyecto local. Este archivo contiene el usuario, contraseña, y nombre de la BD local de su propia máquina. Como está en el .gitignore, nunca se subirá al repositorio. (no recuerdo si esto se hacia por default o lo tenian que hacer ustedes)
+7. Antes de que puedan ejecutar el código, la base de datos debe existir en su servidor local (MySQL).
 Deben cargar el esquema de la base de datos que está en la carpeta db/ a su propio servidor de base de datos local.
-8.Finalmente, deben verificar que la aplicación funciona correctamente.
+8. Finalmente, deben verificar que la aplicación funciona correctamente.
 Para eso ejecuten elPHP MVC en su servidor local con XAAMP.
 9. Finalmente si realizaron un cambio en el repositorio local, como modificar un archivo abran gitbash en la carpeta clonada, obviamente ahí tiene que haber realizado los cambios
 y al abrir pongan los comandos:
