@@ -1,83 +1,77 @@
 <?php
-class PedidoController {
-    
-    public function checkout() {
-        if (!isset($_SESSION['cliente'])) {
-            header('Location: index.php?controller=cliente&action=login');
-            exit;
+    require_once '../app/core/Controller.php';
+
+    class PedidoController extends Controller {
+        private $pedidoModel;
+        private $carritoModel;
+
+        public function __construct() {
+            $this->pedidoModel = $this->model('Pedido');
+            $this->carritoModel = $this->model('Carrito');
         }
-        
-        $carritoModel = new Carrito();
-        $id_carrito = $carritoModel->obtenerOCrearCarrito($_SESSION['cliente']['id_cliente']);
-        $productos = $carritoModel->obtenerProductos($id_carrito);
-        $total = $carritoModel->obtenerTotal($id_carrito);
-        
-        if (empty($productos)) {
-            header('Location: index.php?controller=carrito&action=index');
-            exit;
-        }
-        
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $datos_pedido = [
-                'tipo_retiro' => $_POST['tipo_retiro'] ?? 'tienda',
-                'costo_envio' => $_POST['tipo_retiro'] === 'domicilio' ? 5.00 : 0.00,
-                'costo_producto' => $total,
-                'costo_total' => $total + ($_POST['tipo_retiro'] === 'domicilio' ? 5.00 : 0.00),
-                'fecha_entrega' => $_POST['fecha_entrega'] ?? date('Y-m-d', strtotime('+1 day')),
-                'hora_entrega' => $_POST['hora_entrega'] ?? '10:00:00',
-                'id_cliente' => $_SESSION['cliente']['id_cliente'],
-                'id_sede' => 1, // Sede por defecto
-                'id_ubicacion' => null
-            ];
+
+        public function procesar() {
+            $this->requireAuth();
             
-            $pedidoModel = new Pedido();
-            $id_pedido = $pedidoModel->crear($datos_pedido);
-            
-            if ($id_pedido) {
-                $pedidoModel->agregarProductos($id_pedido, $productos);
-                $carritoModel->vaciarCarrito($id_carrito);
+            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                $productos_carrito = $this->carritoModel->obtenerProductosCarrito($_SESSION['usuario_id']);
                 
-                header('Location: index.php?controller=pedido&action=confirmacion&id=' . $id_pedido);
-                exit;
-            } else {
-                $error = "Error al procesar el pedido";
+                if (empty($productos_carrito)) {
+                    $this->redirect('cliente/carrito');
+                    return;
+                }
+
+                $subtotal = $this->carritoModel->calcularSubtotal($_SESSION['usuario_id'], $_SESSION['usuario_rol']);
+                $costo_envio = 0;
+                
+                // Calcular costo de envío para B2B
+                if ($_SESSION['usuario_rol'] != 'CLIENTE_ESTANDAR' && $_POST['tipo_entrega'] == 'DOMICILIO') {
+                    // Aquí iría la lógica para calcular el costo de envío
+                    $costo_envio = 10.00; // Valor por defecto
+                }
+
+                $datos_pedido = [
+                    'id_cliente' => $_SESSION['usuario_id'],
+                    'id_sede' => 1, // Sede principal
+                    'id_direccion_entrega' => $_POST['tipo_entrega'] == 'DOMICILIO' ? $_POST['id_direccion'] : null,
+                    'tipo_entrega' => $_POST['tipo_entrega'],
+                    'fecha_entrega' => $_POST['fecha_entrega'],
+                    'ventana_entrega' => $_POST['ventana_entrega'],
+                    'subtotal_productos' => $subtotal,
+                    'costo_envio' => $costo_envio,
+                    'costo_total' => $subtotal + $costo_envio,
+                    'tipo_comprobante' => ($_SESSION['usuario_rol'] == 'EMPRESA_FACTURA') ? 'FACTURA' : 'BOLETA',
+                    'rol_cliente' => $_SESSION['usuario_rol']
+                ];
+
+                $id_pedido = $this->pedidoModel->crear($datos_pedido, $productos_carrito);
+                
+                if ($id_pedido) {
+                    // Vaciar carrito
+                    $this->carritoModel->vaciarCarrito($_SESSION['usuario_id']);
+                    
+                    $data['success'] = 'Pedido creado exitosamente. ID: ' . $id_pedido;
+                    $data['id_pedido'] = $id_pedido;
+                    $this->view('cliente_b2c/pedido_confirmado', $data);
+                } else {
+                    $data['error'] = 'Error al procesar el pedido';
+                    $this->redirect('cliente/checkout');
+                }
             }
         }
-        
-        include 'views/pedido/checkout.php';
-    }
-    
-    public function confirmacion() {
-        $id_pedido = $_GET['id'] ?? null;
-        
-        if (!$id_pedido || !isset($_SESSION['cliente'])) {
-            header('Location: index.php');
-            exit;
+
+        public function hojaProduccion() {
+            // Esta función será llamada desde AdminController
+            $fecha_entrega = $_GET['fecha'] ?? date('Y-m-d');
+            $ventana_entrega = $_GET['ventana'] ?? 'MAÑANA';
+            
+            $produccion = $this->pedidoModel->calcularProduccionTotal($fecha_entrega, $ventana_entrega);
+            
+            $data['fecha_entrega'] = $fecha_entrega;
+            $data['ventana_entrega'] = $ventana_entrega;
+            $data['produccion'] = $produccion;
+            
+            return $data;
         }
-        
-        $pedidoModel = new Pedido();
-        $pedido = $pedidoModel->obtenerPorId($id_pedido);
-        
-        if (!$pedido || $pedido['id_cliente'] != $_SESSION['cliente']['id_cliente']) {
-            header('Location: index.php');
-            exit;
-        }
-        
-        $productos = $pedidoModel->obtenerProductosPedido($id_pedido);
-        
-        include 'views/pedido/confirmacion.php';
     }
-    
-    public function mis_pedidos() {
-        if (!isset($_SESSION['cliente'])) {
-            header('Location: index.php?controller=cliente&action=login');
-            exit;
-        }
-        
-        $pedidoModel = new Pedido();
-        $pedidos = $pedidoModel->obtenerPorCliente($_SESSION['cliente']['id_cliente']);
-        
-        include 'views/pedido/mis_pedidos.php';
-    }
-}
-?>
+    ?>

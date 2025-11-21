@@ -1,22 +1,24 @@
 <?php
-class HomeController {
-    
-    public function home() {
-        $productoModel = new Producto();
-        $categoriaModel = new Categoria();
-        
-        $productos_destacados = array_slice($productoModel->obtenerTodos(), 0, 8);
-        $categorias = $categoriaModel->obtenerTodas();
-        
-        include 'views/home/index.php';
-    }
-    
-    public function about() {
-        include 'views/home/about.php';
-    }
-    
-    public function contact() {
-        include 'views/home/contact.php';
+require_once '../app/core/Controller.php';
+
+class HomeController extends Controller {
+    public function index() {
+        if ($this->isLoggedIn()) {
+            // Redirigir según el rol del usuario
+            switch ($_SESSION['usuario_rol']) {
+                case 'CLIENTE_ESTANDAR':
+                    $this->redirect('cliente/catalogo');
+                    break;
+                case 'MAYORISTA_BOLETA':
+                case 'EMPRESA_FACTURA':
+                    $this->redirect('cliente/dashboard');
+                    break;
+                default:
+                    $this->redirect('auth/login');
+            }
+        } else {
+            $this->redirect('auth/login');
+        }
     }
 }
 ?>
