@@ -2,10 +2,26 @@
 require_once '../app/core/Controller.php';
 require_once '../app/controllers/PedidoController.php';
 
+/*
+Class AdminController
+
+Controlador principal del panel de administración.
+Gestiona el flujo de trabajo para la administración de clientes, productos
+y visualización de la hoja de producción.
+
+ */
+
+
 class AdminController extends Controller {
     private $clienteModel;
     private $productoModel;
     private $pedidoController;
+
+    /*
+    Constructor de la clase.
+    Inicializa los modelos de Cliente y Producto, y el controlador de Pedidos
+    para reutilizar la lógica de negocio existente.
+     */
 
     public function __construct() {
         $this->clienteModel = $this->model('Cliente');
@@ -13,10 +29,22 @@ class AdminController extends Controller {
         $this->pedidoController = new PedidoController();
     }
 
+    /*
+    Muestra el Dashboard principal.
+    Valida que el usuario tenga sesión activa antes de renderizar.
+    */ 
+
     public function index() {
         $this->requireAuth();
         $this->view('admin/dashboard');
     }
+
+    /*
+    Gestiona el CRUD de Clientes.
+    Permite visualizar la lista de clientes y procesar formularios POST
+    para actualizar roles (B2B/B2C) y datos de facturación.
+    Renderiza la vista 'admin/gestion_clientes' con los datos.
+     */
 
     public function gestionClientes() {
         $this->requireAuth();
@@ -46,6 +74,13 @@ class AdminController extends Controller {
         $this->view('admin/gestion_clientes', $data);
     }
 
+    /*
+    Gestiona el CRUD de Productos.
+    Permite visualizar la lista de productos, y crear.
+
+    Renderiza la vista 'admin/gestion_productos' con los datos.
+     */
+
     public function gestionProductos() {
         $this->requireAuth();
         
@@ -74,6 +109,10 @@ class AdminController extends Controller {
         
         $this->view('admin/gestion_productos', $data);
     }
+
+    /*
+    Permite visualizar los pedidos pendientes del turno mañana y tarde
+     */
 
     public function hojaProduccion() {
         $this->requireAuth();
