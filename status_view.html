@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Baseline Arquitectónico | Estado del Sistema</title>
+</head>
+<body>
+    <h1>Verificación de la Práctica</h1>
+    <p>Petición Frontend (Vista) -> Backend (Controlador/Modelo) -> Base de Datos</p>
+    <hr>
+    
+    <h2>Resultado del Backend:</h2>
+    <pre id="status-output">Intentando conectar...</pre>
+
+    <script>
+        const API_URL = 'controller/StatusController.php'; 
+
+        fetch(API_URL)
+            .then(response => {
+                if (!response.ok) {
+                    // Captura el 404 y cualquier otro error HTTP
+                    throw new Error('La petición HTTP falló con estado: ' + response.status);
+                }
+                return response.json(); 
+            })
+            .then(data => {
+                const output = document.getElementById('status-output');
+                output.textContent = JSON.stringify(data, null, 2);
+                if (data.system_status === "OK") {
+                    output.style.color = 'green';
+                    output.style.fontWeight = 'bold';
+                } else if (data.system_status.startsWith("WARNING")) {
+                    output.style.color = 'orange';
+                } else {
+                    output.style.color = 'red';
+                }
+            })
+            .catch(error => {
+                // Mensaje de error claro para el usuario
+                document.getElementById('status-output').textContent = 
+                    'Fallo de comunicación. Revise que MySQL esté activo, las credenciales en Conexion.php sean correctas, y la ortografía de sus carpetas. Mensaje: ' + error.message;
+                document.getElementById('status-output').style.color = 'red';
+            });
+    </script>
+</body>
+</html>
