@@ -1,7 +1,7 @@
 <?php
 $db_name = 'PanaderiaBarriosDB'; 
 $db_user = 'root'; 
-$db_pass = 'fanwhy1'; 
+$db_pass = ''; 
 
 try {
     $pdo = new PDO("mysql:host=localhost;dbname={$db_name}", $db_user, $db_pass);
