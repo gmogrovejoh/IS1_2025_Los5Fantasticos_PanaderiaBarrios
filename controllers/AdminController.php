@@ -111,7 +111,8 @@ class AdminController extends Controller {
     }
 
     /*
-    Permite visualizar los pedidos pendientes del turno mañana y tarde
+    Permite visualizar los pedidos pendientes del turno mañana y tarde.
+    Detallando cada pedido de acuerdo a lo solicitado del cliente B2B o B2C.
      */
 
     public function hojaProduccion() {
