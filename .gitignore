@@ -1,0 +1,12 @@
+/vendor/
+.env
+.env.local
+config/database.php
+*.sql
+*.sqlite
+/cache/
+/log/
+/tmp/
+.idea/
+.vscode/
+nbproject/

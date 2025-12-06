@@ -1,0 +1,74 @@
+/* SIDEBAR */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 230px;
+    height: 100%;
+    background: #c67b4e;
+    padding: 25px 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.side-title {
+    font-size: 1.6rem;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    padding: 12px 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    transition: 0.3s;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar a:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+.logout {
+    margin-top: auto;
+    background: rgba(255,255,255,0.15);
+}
+
+/* CONTENIDO */
+.contenido {
+    margin-left: 260px;
+    padding: 35px;
+}
+
+.titulo-seccion {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+/* GRID PRO */
+.grid-pro {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+.card-pro {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(5px);
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    text-align: center;
+    transition: 0.3s;
+}
+
+.card-pro:hover {
+    transform: translateY(-5px);
+}

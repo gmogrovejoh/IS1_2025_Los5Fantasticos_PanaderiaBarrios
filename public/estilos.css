@@ -1,0 +1,870 @@
+/* ================================================= */
+/* === 1. Reset Básico y Variables === */
+/* ================================================= */
+
+
+
+* {
+    margin: 20;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ------------------------------ */
+/*        ESTILOS GENERALES       */
+/* ------------------------------ */
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #faf6f2;
+    color: #ffffff;
+    margin: 0;
+}
+
+.contenedor {
+    width: 90%;
+    margin: auto;
+    padding: 80px 0;
+}
+
+.titulo-seccion {
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: #ffffff;
+}
+
+/* ======================= */
+/*   FORMULARIOS GENERALES */
+/* ======================= */
+
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 80px;
+}
+
+.form-card {
+    width: 350px;
+    padding: 25px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+.form-card h2 {
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+}
+
+.form-card input {
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+.form-card .btn {
+    width: 100%;
+    padding: 12px;
+    background: #c67b4e;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.form-card .btn:hover {
+    background: #a8653d;
+}
+
+.error-msg {
+    background: #ffdddd;
+    color: #b30000;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.texto-sec {
+    margin-top: 10px;
+    color: #777;
+}
+
+
+/* ------------------------------ */
+/*        GRID DE PRODUCTOS       */
+/* ------------------------------ */
+
+.grid-productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+.card-producto {
+    background: white;
+    border-radius: 16px;
+    padding: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transition: 0.3s ease;
+    text-align: center;
+}
+
+.card-producto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+}
+
+.card-producto img {
+    width: 100%;
+    border-radius: 12px;
+    height: 180px;
+    object-fit: cover;
+}
+
+.card-producto h2 {
+    font-size: 1.3rem;
+    margin-top: 12px;
+    color: #333;
+}
+
+.precio {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffa109;
+    margin: 10px 0;
+}
+
+/* ------------------------------ */
+/*            BOTÓN               */
+/* ------------------------------ */
+
+.btn-agregar {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: #c67b4e;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-agregar:hover {
+    background: #a5633c;
+}
+
+/* ------------------------------ */
+/*     MENSAJE SIN PRODUCTOS      */
+/* ------------------------------ */
+
+.no-prod {
+    text-align: center;
+    font-size: 1.4rem;
+    color: #777777;
+}
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.3;
+    color: #ffffff;
+
+    background: 
+        linear-gradient(rgba(0, 0, 0, 0.40), rgba(0, 0, 0, 0.30)),
+        url("../img/12.jpg") no-repeat center center fixed;
+    background-size: cover;
+
+    overflow-x: hidden;
+}
+
+
+/* Variables CSS para colores */
+:root {
+    --primary-color: #8b4513; /* Marrón panadería */
+    --secondary-color: #f4a261; /* Amarillo dorado */
+    --accent-color: #e76f51; /* Rojo para botones */
+    --light-bg: #fff8e1; /* Fondo claro */
+    --dark-text: #333;
+    --light-text: #666;
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para Botones (Reusado) */
+.btn {
+    display: inline-block;
+    background: #8f4b16;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #aa4316; /* Tono más oscuro de accent-color */
+}
+
+/* ================================================= */
+/* === 2. Loader y Navegación === */
+/* ================================================= */
+
+/* Loader */
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--light-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.6s ease;
+}
+
+.pan-loader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.pan, .bread {
+    width: 50px;
+    height: 50px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    animation: bounce 1.5s infinite ease-in-out;
+}
+
+.bread {
+    animation-delay: 0.5s;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+/* Navegación */
+.nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 0 2px 10px var(--shadow);
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo-img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--dark-text);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--accent-color);
+}
+
+/* Menú flotante */
+.menu-flotante {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.menu-flotante a {
+    background: #c5c88cbf;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: background 0.3s;
+}
+
+.menu-flotante a:hover {
+    background: var(--accent-color);
+}
+
+/* ================================================= */
+/* === 3. Secciones Principales === */
+/* ================================================= */
+
+/* Sección Hero */
+.hero {
+    height: 100vh;
+    background: 
+        linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.25)),
+        url('../img/fondo_panaderia.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    padding: 2rem;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+/* CTA Secreto */
+.secreto-cta {
+    padding: 4rem 2rem;
+    text-align: center;
+    background: var(--light-bg);
+}
+
+.cta-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cta-content h2 {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Sección Productos (Grid) */
+.productos, .ofertas {
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.productos h2, .ofertas h2 {
+    font-size: 2.5rem;
+    color: #fbfbfb;
+    margin-bottom: 3rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px var(--shadow);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.card h3 {
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+}
+
+.card .precio {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffa109;
+    margin-bottom: 1rem;
+}
+
+/* Swiper general */
+.ofertasSwiper {
+    max-width: 1200px;
+    margin: auto;
+    padding: 10px;
+}
+
+/* Contenedor de slides */
+.swiper-wrapper {
+    display: flex;
+    align-items: stretch; /* Asegura altura uniforme */
+}
+
+/* Cada slide */
+.swiper-slide {
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+}
+
+/* ❗ Corrección principal: evitar imágenes que se salgan o se monten */
+.swiper-slide img {
+    width: 100%;
+    max-width: 280px; /* Para que TODAS tengan un límite */
+    height: auto;
+
+    object-fit: cover; /* Evita deformaciones */
+    border-radius: 15px;
+    display: block;
+}
+
+/* Tarjeta interna opcional */
+.card-oferta {
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    text-align: center;
+}
+
+
+/* Sección Nosotros */
+.nosotros {
+    padding: 6rem 2rem;
+    background-color: var(--light-bg);
+}
+
+.nosotros-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+}
+
+.nosotros-texto h2 {
+    color: var(--primary-color);
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.nosotros-texto p {
+    margin-bottom: 1rem;
+    color: var(--light-text);
+}
+
+.nosotros-cifras {
+    display: flex;
+    justify-content: space-around;
+    padding: 2rem;
+    background: #8f4b16;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.nosotros-cifras h3 {
+    font-size: 3rem;
+    color: white;
+    font-weight: 800;
+}
+
+.nosotros-cifras p {
+    color: white;
+    font-weight: 500;
+}
+
+/* Sección Contacto */
+.contacto {
+    padding: 6rem 2rem;
+}
+
+.contacto-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.contacto-container h2 {
+    font-size: 2.5rem;
+    color: #ffffff;
+}
+
+.contacto-container .subtexto {
+    color: #ffffff;
+    margin-bottom: 3rem;
+}
+
+.contacto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.contact-card {
+    background: rgb(249, 249, 249);
+    padding: 2rem;
+    border-radius: 30px;
+    box-shadow: 0 2px 10px var(--shadow);
+    text-align: center;
+}
+
+.contact-card img {
+    width: 50px;
+    margin-bottom: 1rem;
+}
+
+.contact-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.contacto-form-card {
+    grid-column: 1 / -1; 
+    background: var(--light-bg);
+}
+
+.contacto-form input,
+.contacto-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.contacto-form textarea {
+    resize: vertical;
+}
+
+/* Footer */
+.footer {
+    background: var(--primary-color);
+    color: white;
+    padding: 3rem 2rem 1rem;
+}
+
+.footer-top {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 2rem;
+}
+
+.footer-logo img {
+    width: 60px;
+    margin-bottom: 10px;
+}
+
+.footer-links h3,
+.footer-contacto h3,
+.footer-redes h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    border-bottom: 2px solid var(--secondary-color);
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.footer-links a,
+.footer-contacto p,
+.footer-contacto a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin-bottom: 10px;
+}
+
+.footer-links a:hover,
+.footer-contacto a:hover {
+    color: var(--secondary-color);
+}
+
+.redes-icons a {
+    margin-right: 10px;
+}
+
+.redes-icons img {
+    width: 30px;
+    vertical-align: middle;
+}
+
+.copy {
+    text-align: center;
+    font-size: 0.9rem;
+    padding-top: 1rem;
+}
+
+/* ================================================= */
+/* === 4. Media Queries (Responsividad) === */
+/* ================================================= */
+
+@media (max-width: 900px) {
+    .nosotros-content {
+        grid-template-columns: 1fr;
+    }
+    .nosotros-cifras {
+        order: -1; 
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 500px) {
+    .nav {
+        padding: 1rem;
+    }
+    .nav-links {
+        display: none; /* Idealmente, aquí se implementaría un menú hamburguesa */
+    }
+    .footer-top {
+        grid-template-columns: 1fr;
+    }
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+    .productos h2, .ofertas h2, .contacto-container h2 {
+        font-size: 2rem;
+    }
+}
+
+/* Fondo general */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Overlay oscuro suave */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(4px);
+    z-index: -1;
+}
+
+/* Contenedor principal */
+.dashboard {
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.dash-container {
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+}
+
+/* Título */
+.dash-title {
+    color: #fff;
+    font-size: 2.4rem;
+    margin-bottom: 30px;
+    text-shadow: 0 4px 25px rgba(0,0,0,0.4);
+}
+
+/* Grid de cards */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+    gap: 24px;
+}
+
+/* Card Glassmorphism */
+.card {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 28px;
+    border-radius: 16px;
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    border: 1px solid rgba(255,255,255,0.25);
+    backdrop-filter: blur(12px);
+
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.card .icon {
+    font-size: 2rem;
+    opacity: 0.9;
+}
+
+/* Hover */
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.35);
+}
+
+/* Card roja (logout) */
+.card.red {
+    background: rgba(255, 80, 80, 0.25);
+    border-color: rgba(255, 80, 80, 0.45);
+}
+
+/* Hover Red */
+.card.red:hover {
+    background: rgba(255, 60, 60, 0.35);
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+    .dash-title {
+        font-size: 1.9rem;
+    }
+}
+
+
+/* =====================
+   FORMULARIO GLASS
+===================== */
+
+.form-wrapper {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+}
+
+.form-glass {
+    width: 100%;
+    max-width: 420px;
+    padding: 35px;
+    border-radius: 20px;
+
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    text-align: center;
+}
+
+.form-glass h2 {
+    color: #fff;
+    font-size: 1.9rem;
+    margin-bottom: 25px;
+    text-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+
+/* Inputs */
+.form-glass input {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 18px;
+
+    border: none;
+    outline: none;
+
+    border-radius: 10px;
+    font-size: 1rem;
+
+    background: rgba(255,255,255,0.55);
+    color: #222;
+
+    transition: background .2s ease;
+}
+
+.form-glass input:focus {
+    background: rgba(255,255,255,0.8);
+}
+
+/* Botón */
+.btn-glass {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+
+    background: rgba(255, 200, 70, 0.6);
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-weight: bold;
+
+    backdrop-filter: blur(10px);
+    transition: .25s ease-in-out;
+}
+
+.btn-glass:hover {
+    background: rgba(255, 200, 70, 0.9);
+    transform: translateY(-3px);
+}
+
+
+.btn-delete {
+    padding: 8px 15px;
+    border-radius: 10px;
+    background: rgba(255, 80, 80, 0.3);
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    backdrop-filter: blur(10px);
+    transition: .25s ease-in-out;
+}
+
+.btn-delete:hover {
+    background: rgba(255, 60, 60, 0.7);
+    transform: translateY(-3px);
+}

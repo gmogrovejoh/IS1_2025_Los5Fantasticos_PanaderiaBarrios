@@ -1,0 +1,70 @@
+openapi: 3.0.0
+info:
+  title: API de Productos - Panadería
+  version: 1.0.0
+  description: Documentación generada para la práctica de Ingeniería de Software.
+
+paths:
+  /api/productos:
+    get:
+      summary: Lista todos los productos
+      responses:
+        '200':
+          description: Lista de productos
+    post:
+      summary: Crea un producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                precio_b2c:
+                  type: number
+      responses:
+        '201':
+          description: Producto creado
+
+  /api/productos?id={id}:
+    get:
+      summary: Obtiene un producto por ID
+      parameters:
+      - in: query
+        name: id
+        schema:
+          type: integer
+        required: true
+      responses:
+        '200':
+          description: Producto encontrado
+        '404':
+          description: No encontrado
+
+  /api/productos/update:
+    put:
+      summary: Actualiza un producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Actualizado
+
+  /api/productos/delete:
+    delete:
+      summary: Elimina un producto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Eliminado
