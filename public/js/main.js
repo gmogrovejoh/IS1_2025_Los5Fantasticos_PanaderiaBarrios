@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // CONFIGURACIÓN
     // -------------------------------------------------------------------------
     // IMPORTANTE: Asegúrate de que esta URL coincida con tu carpeta del proyecto
-    const BASE_URL = 'http://localhost/panaderia-barrios/'; 
+    const BASE_URL = 'https://lavender-meerkat-667046.hostingersite.com/'; 
 
     console.log('Sistema cargado. URL Base:', BASE_URL);
 
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             console.error('Error:', error);
-            alert("Error de conexión al intentar agregar al carrito.");
+            alert("Error f al intentar agregar al carrito.");
         });
     }
 

@@ -1,0 +1,13 @@
+RewriteEngine On
+RewriteBase /swagger/
+
+# Si el archivo o carpeta existe, permitir acceso directo
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Redirigir solo las rutas vacías a index.html
+RewriteRule ^$ index.html [L]
+
+# Todo lo demás también a index.html
+RewriteRule ^.*$ index.html [L]

@@ -65,7 +65,11 @@
                     </form>
                 </div>
             </div>
+
+            
         </div>
+
+        
 
         <!-- COLUMNA DERECHA: DIRECCIONES -->
         <div class="col-lg-7">
@@ -107,6 +111,32 @@
                 </div>
             </div>
         </div>
+
+        <!-- TARJETA 2: SEGURIDAD (NUEVO) -->
+            <div class="card shadow-sm h-100 border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-lock me-2"></i>Seguridad</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="<?= BASE_URL ?>cliente/actualizarPassword">
+                        <div class="mb-3">
+                            <label class="form-label">Contraseña Actual</label>
+                            <input type="password" name="clave_actual" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Nueva Contraseña</label>
+                            <input type="password" name="clave_nueva" class="form-control" minlength="6" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Confirmar Nueva</label>
+                            <input type="password" name="clave_confirmar" class="form-control" minlength="6" required>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100">
+                            <i class="fas fa-key me-2"></i>Cambiar Contraseña
+                        </button>
+                    </form>
+                </div>
+            </div>
     </div>
 </div>
 

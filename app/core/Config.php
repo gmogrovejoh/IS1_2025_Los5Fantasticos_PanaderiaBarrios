@@ -3,13 +3,13 @@
 
 // Configuración de la base de datos
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'PanaderiaBarriosDB');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_NAME', 'u288537394_panaderia');
+define('DB_USER', 'u288537394_adminPanaderia');
+define('DB_PASS', 'Deskjetsa15');
 
 // Configuración de la aplicación
 define('APP_NAME', 'Panadería Barrios');
-define('BASE_URL', 'http://localhost/panaderia-barrios/');
+define('BASE_URL', 'https://lavender-meerkat-667046.hostingersite.com/');
 
 // Configuración de horarios de corte
 define('HORA_CORTE_MANANA', '22:00'); // 10 PM del día anterior

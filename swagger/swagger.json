@@ -1,0 +1,135 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Panadería Barrios",
+    "version": "1.0.0",
+    "description": "Documentación de la API REST del sistema Panadería Barrios."
+  },
+
+  "servers": [
+    {
+      "url": "https://lavender-meerkat-667046.hostingersite.com/public"
+    }
+  ],
+
+  "paths": {
+    "/api/productos": {
+      "get": {
+        "summary": "Obtener todos los productos",
+        "tags": ["Productos"],
+        "responses": {
+          "200": {
+            "description": "Lista de productos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Producto" }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "post": {
+        "summary": "Crear un nuevo producto",
+        "tags": ["Productos"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Producto" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Producto creado exitosamente" }
+        }
+      }
+    },
+
+    "/api/productos/{id}": {
+      "get": {
+        "summary": "Obtener un producto por ID",
+        "tags": ["Productos"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Producto encontrado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Producto" }
+              }
+            }
+          },
+          "404": { "description": "Producto no encontrado" }
+        }
+      },
+
+      "put": {
+        "summary": "Actualizar un producto",
+        "tags": ["Productos"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Producto" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Producto actualizado correctamente" },
+          "404": { "description": "Producto no encontrado" }
+        }
+      },
+
+      "delete": {
+        "summary": "Eliminar un producto",
+        "tags": ["Productos"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Producto eliminado" },
+          "404": { "description": "Producto no encontrado" }
+        }
+      }
+    }
+  },
+
+  "components": {
+    "schemas": {
+      "Producto": {
+        "type": "object",
+        "properties": {
+          "id_producto": { "type": "integer" },
+          "nombre": { "type": "string" },
+          "descripcion": { "type": "string" },
+          "precio_b2c": { "type": "number" },
+          "id_categoria": { "type": "integer" }
+        }
+      }
+    }
+  }
+}

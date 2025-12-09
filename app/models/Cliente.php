@@ -223,5 +223,27 @@ class Cliente {
         }
         return false;
     }
+    
+    public function cambiarContrasenia($id_cliente, $passActual, $passNueva) {
+        // 1. Obtener la contraseña actual de la BD (hash)
+        $stmt = $this->conn->prepare("SELECT contrasenia FROM cliente WHERE id_cliente = :id");
+        $stmt->execute([':id' => $id_cliente]);
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$res) return false;
+
+        // 2. Verificar que la contraseña actual ingresada coincida con el hash
+        if (password_verify($passActual, $res['contrasenia'])) {
+            // 3. Encriptar la nueva contraseña
+            $nuevoHash = password_hash($passNueva, PASSWORD_DEFAULT);
+            
+            // 4. Actualizar en BD
+            $sql = "UPDATE cliente SET contrasenia = :pass WHERE id_cliente = :id";
+            $update = $this->conn->prepare($sql);
+            return $update->execute([':pass' => $nuevoHash, ':id' => $id_cliente]);
+        }
+
+        return false; // Contraseña actual incorrecta
+    }
 }
 ?>

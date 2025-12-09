@@ -1,0 +1,21 @@
+{
+    "name": "los5fantasticos/panaderia-barrios",
+    "description": "Sistema de Gestión Panadería Barrios SAC",
+    "type": "proyect",
+    "autoload": {
+        "psr-4": {
+            "Los5fantasticos\\PanaderiaBarrios\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Noemi-Chura",
+            "email": "nechuram@unjbg.edu.pe"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6",
+        "monolog/monolog": "^3.9",
+        "zircote/swagger-php": "^5.7"
+    }
+}

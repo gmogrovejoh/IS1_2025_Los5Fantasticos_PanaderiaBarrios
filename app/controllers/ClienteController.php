@@ -67,41 +67,6 @@ class ClienteController extends Controller {
         $this->view('cliente_b2b/checkout', $data);
     }
 
-    public function perfil() {
-        $this->requireAuth();
-        $clienteModel = $this->model('Cliente');
-        $id_cliente = $_SESSION['usuario_id'];
-        $mensaje = [];
-
-        // 1. Lógica para Actualizar Datos Personales
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['actualizar_perfil'])) {
-            $datos = [
-                'nombre' => $_POST['nombre'],
-                'apellidos' => $_POST['apellidos'],
-                'telefono' => $_POST['telefono'],
-                'ruc' => $_POST['ruc'],
-                'razon_social' => $_POST['razon_social']
-            ];
-            
-            if ($clienteModel->actualizarInformacion($id_cliente, $datos)) {
-                // Actualizamos sesión para reflejar cambios inmediatos
-                $_SESSION['usuario_nombre'] = $datos['nombre'];
-                $_SESSION['usuario_apellidos'] = $datos['apellidos'];
-                $mensaje['success'] = 'Información actualizada correctamente.';
-            } else {
-                $mensaje['error'] = 'Error al actualizar información.';
-            }
-        }
-
-        // Obtener datos frescos
-        $data['cliente'] = $clienteModel->obtenerPorId($id_cliente);
-        $data['direcciones'] = $clienteModel->obtenerDirecciones($id_cliente);
-        $data['distritos'] = $clienteModel->obtenerDistritos(); // Para el select
-        $data['mensaje'] = $mensaje;
-
-        $this->view('cliente_b2b/perfil', $data);
-    }
-
     public function guardarDireccion() {
         $this->requireAuth();
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -127,6 +92,76 @@ class ClienteController extends Controller {
             $clienteModel->eliminarDireccion($_POST['id_direccion'], $_SESSION['usuario_id']);
         }
         $this->redirect('cliente/perfil');
+    }
+    
+    public function actualizarPassword() {
+        $this->requireAuth();
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $actual = $_POST['clave_actual'];
+            $nueva = $_POST['clave_nueva'];
+            $confirmar = $_POST['clave_confirmar'];
+
+            // Validación básica
+            if ($nueva !== $confirmar) {
+                $_SESSION['mensaje_flash'] = ['tipo' => 'danger', 'texto' => 'Las nuevas contraseñas no coinciden.'];
+            } elseif (strlen($nueva) < 6) {
+                $_SESSION['mensaje_flash'] = ['tipo' => 'danger', 'texto' => 'La contraseña debe tener al menos 6 caracteres.'];
+            } else {
+                // Llamar al modelo
+                $clienteModel = $this->model('Cliente');
+                if ($clienteModel->cambiarContrasenia($_SESSION['usuario_id'], $actual, $nueva)) {
+                    $_SESSION['mensaje_flash'] = ['tipo' => 'success', 'texto' => 'Contraseña actualizada correctamente.'];
+                } else {
+                    $_SESSION['mensaje_flash'] = ['tipo' => 'danger', 'texto' => 'La contraseña actual ingresada es incorrecta.'];
+                }
+            }
+        }
+        $this->redirect('cliente/perfil');
+    }
+
+    /**
+     * Muestra el perfil del usuario (Modificado para leer el mensaje flash).
+     */
+    public function perfil() {
+        $this->requireAuth();
+        $clienteModel = $this->model('Cliente');
+        $id_cliente = $_SESSION['usuario_id'];
+        $mensaje = [];
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['actualizar_perfil'])) {
+            $datos = [
+                'nombre' => $_POST['nombre'],
+                'apellidos' => $_POST['apellidos'],
+                'telefono' => $_POST['telefono'],
+                'ruc' => $_POST['ruc'],
+                'razon_social' => $_POST['razon_social']
+            ];
+            
+            if ($clienteModel->actualizarInformacion($id_cliente, $datos)) {
+                // Actualizamos sesión para reflejar cambios inmediatos
+                $_SESSION['usuario_nombre'] = $datos['nombre'];
+                $_SESSION['usuario_apellidos'] = $datos['apellidos'];
+                $mensaje['success'] = 'Información actualizada correctamente.';
+            } else {
+                $mensaje['error'] = 'Error al actualizar información.';
+            }
+        }        
+
+        //Capturar mensaje flash de contraseña (si existe)
+        if (isset($_SESSION['mensaje_flash'])) {
+            $tipo = $_SESSION['mensaje_flash']['tipo'] == 'success' ? 'success' : 'error';
+            $mensaje[$tipo] = $_SESSION['mensaje_flash']['texto'];
+            unset($_SESSION['mensaje_flash']); // Limpiar mensaje
+        }
+
+        // Cargar vista
+        $this->view('cliente_b2b/perfil', [
+            'cliente' => $clienteModel->obtenerPorId($_SESSION['usuario_id']),
+            'direcciones' => $clienteModel->obtenerDirecciones($_SESSION['usuario_id']),
+            'distritos' => $clienteModel->obtenerDistritos(),
+            'mensaje' => $mensaje
+        ]);
     }
 }
 ?>

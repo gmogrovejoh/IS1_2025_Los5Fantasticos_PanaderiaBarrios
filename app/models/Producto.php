@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../core/Database.php';
+
 class Producto {
     private $conn;
     private $table = 'producto';

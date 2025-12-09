@@ -26,6 +26,7 @@
                     <p>¿No tienes cuenta? <a href="<?php echo BASE_URL; ?>auth/registro">Regístrate aquí</a></p>
                 </div>
                 
+                <!--
                 <div class="mt-4">
                     <h6>Usuarios de prueba:</h6>
                     <small class="text-muted">
@@ -33,6 +34,7 @@
                         <strong>ADMIN:</strong> abarriosriv@unjbg.edu.pe / asdf
                     </small>
                 </div>
+                -->
             </div>
         </div>
     </div>

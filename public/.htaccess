@@ -1,13 +1,9 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
-    # IMPORTANTE: Define la base de tu URL
-    RewriteBase /panaderia-barrios/public/
+    RewriteBase /public/
 
-    # Si el archivo existe físicamente, no hacer nada
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-
-    # Redirigir todo lo demás a index.php
     RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
 </IfModule>
