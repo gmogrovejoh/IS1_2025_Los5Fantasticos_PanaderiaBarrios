@@ -17,6 +17,12 @@ class PedidoController extends Controller {
     // Función para ver la lista de pedidos
     public function historial() {
         $this->requireAuth();
+
+        if ($_SESSION['usuario_rol'] == 'ADMIN') {
+            $this->redirect('admin/');
+            return;
+        }
+
         $pedidos = $this->pedidoModel->obtenerPorCliente($_SESSION['usuario_id']);
         $data['pedidos'] = $pedidos;
         $this->view('cliente_b2b/historial', $data);
@@ -26,8 +32,32 @@ class PedidoController extends Controller {
         $this->requireAuth();
         
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $productos_carrito = $this->carritoModel->obtenerProductos($_SESSION['usuario_id']);
             
+            // --- NUEVA VALIDACIÓN DE FECHA ---
+            $fecha_solicitada = $_POST['fecha_entrega'];
+            $fecha_minima = date('Y-m-d', strtotime('+1 day')); // Mañana
+
+            // Si la fecha solicitada es menor a mañana (es decir, hoy o ayer)
+            if ($fecha_solicitada < $fecha_minima) {
+                // Obtenemos productos y subtotal para recargar la vista con el error
+                $productos_carrito = $this->carritoModel->obtenerProductos($_SESSION['usuario_id']);
+                $subtotal = $this->carritoModel->calcularTotal($_SESSION['usuario_id']);
+                
+                // Cargamos datos para que no se rompa la vista
+                $data = [
+                    'productos' => $productos_carrito,
+                    'subtotal' => $subtotal,
+                    'error' => 'Error: Los pedidos deben realizarse con al menos 1 día de anticipación (A partir de mañana).',
+                    // Si tienes el método de direcciones, cárgalo también aquí
+                    'direcciones' => $this->model('Cliente')->obtenerDirecciones($_SESSION['usuario_id'])
+                ];
+                
+                $this->view('cliente_b2b/checkout', $data);
+                return; // DETENEMOS LA EJECUCIÓN
+            }
+            // ---------------------------------
+
+            $productos_carrito = $this->carritoModel->obtenerProductos($_SESSION['usuario_id']);
             if (empty($productos_carrito)) {
                 $this->redirect('cliente/carrito');
                 return;
@@ -87,19 +117,7 @@ class PedidoController extends Controller {
         }
     }
 
-    public function hojaProduccion() {
-        // Esta función será llamada desde AdminController
-        $fecha_entrega = $_GET['fecha'] ?? date('Y-m-d');
-        $ventana_entrega = $_GET['ventana'] ?? 'MAÑANA';
-        
-        $produccion = $this->pedidoModel->calcularProduccionTotal($fecha_entrega, $ventana_entrega);
-        
-        $data['fecha_entrega'] = $fecha_entrega;
-        $data['ventana_entrega'] = $ventana_entrega;
-        $data['produccion'] = $produccion;
-        
-        return $data;
-    }
+    
 
     public function detalle($id_pedido) {
         $this->requireAuth();

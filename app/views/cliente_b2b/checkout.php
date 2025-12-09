@@ -75,7 +75,12 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label>Fecha</label>
-                                <input type="date" name="fecha_entrega" class="form-control" required min="<?= date('Y-m-d') ?>">
+                                <!-- CAMBIO: min y value configurados para MAÑANA (+1 day) -->
+                                <input type="date" name="fecha_entrega" class="form-control" 
+                                    required 
+                                    min="<?= date('Y-m-d', strtotime('+1 day')) ?>" 
+                                    value="<?= date('Y-m-d', strtotime('+1 day')) ?>">
+                                <small class="text-muted">Pedidos con 24h de anticipación</small>
                             </div>
                             <div class="col-md-6">
                                 <label>Horario</label>

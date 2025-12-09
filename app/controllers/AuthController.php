@@ -35,15 +35,13 @@ class AuthController extends Controller {
                 // Redirigir según el rol
                 switch ($usuario['rol']) {
                     case 'ADMIN':
-                        $this->redirect('admin/dashboard');
-                        break;
-                    case 'CLIENTE_ESTANDAR':
-                        $this->redirect('cliente/catalogo');
+                        $this->redirect('admin/');
                         break;
                     case 'MAYORISTA_BOLETA':
                     case 'EMPRESA_FACTURA':
-                        $this->redirect('cliente/dashboard');
+                        $this->redirect('cliente/pedidoRapido'); // <--- Redirección directa
                         break;
+
                 }
             } else {
                 $data['error'] = 'Credenciales incorrectas';

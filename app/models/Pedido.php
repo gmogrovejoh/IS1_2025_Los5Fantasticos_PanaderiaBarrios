@@ -141,44 +141,7 @@ class Pedido {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function calcularProduccionTotal($fecha_entrega, $ventana_entrega) {
-        $pedidos = $this->obtenerPedidosProduccion($fecha_entrega, $ventana_entrega);
-        $produccion = [];
-
-        foreach ($pedidos as $item) {
-            // Verificar si es un pack
-            $query = "SELECT pp.id_componente, pp.cantidad as cantidad_componente, pr.nombre
-                      FROM pack_producto pp
-                      JOIN producto pr ON pp.id_componente = pr.id_producto
-                      WHERE pp.id_pack = :id_pack";
-
-            $stmt = $this->conn->prepare($query);
-            $stmt->bindParam(':id_pack', $item['id_producto']);
-            $stmt->execute();
-            $componentes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if (count($componentes) > 0) {
-                // Es un pack, descomponer
-                foreach ($componentes as $componente) {
-                    $producto_nombre = $componente['nombre'];
-                    $cantidad_total = $item['cantidad'] * $componente['cantidad_componente'];
-                    
-                    if (!isset($produccion[$producto_nombre])) {
-                        $produccion[$producto_nombre] = 0;
-                    }
-                    $produccion[$producto_nombre] += $cantidad_total;
-                }
-            } else {
-                // No es un pack, sumar directamente
-                if (!isset($produccion[$item['producto_nombre']])) {
-                    $produccion[$item['producto_nombre']] = 0;
-                }
-                $produccion[$item['producto_nombre']] += $item['cantidad'];
-            }
-        }
-
-        return $produccion;
-    }
+    
 
     private function calcularPrecioUnitario($producto, $rol_cliente) {
         if ($rol_cliente == 'CLIENTE_ESTANDAR') {
@@ -193,21 +156,6 @@ class Pedido {
             return ($producto['monto_solicitado_entero'] / $producto['soles_base_b2b']) * $producto['unidades_base_b2b'];
         }
         return $producto['cantidad'];
-    }
-
-    // Obtener cabecera de un pedido específico
-    public function obtenerPorId($id_pedido) {
-        $query = "SELECT p.*, s.nombre as sede_nombre, d.calle, d.numero, d.referencia, dist.nombre as distrito_nombre
-                  FROM pedido p 
-                  JOIN sede s ON p.id_sede = s.id_sede
-                  LEFT JOIN direccion d ON p.id_direccion_entrega = d.id_direccion
-                  LEFT JOIN distrito dist ON d.id_distrito = dist.id_distrito
-                  WHERE p.id_pedido = :id_pedido";
-        
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(':id_pedido', $id_pedido);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     // Obtener los productos de ese pedido
@@ -263,6 +211,95 @@ class Pedido {
         $stmt->bindParam(':id_dir', $id_direccion);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function obtenerTodosAdmin($estado = null, $fecha = null) {
+        $sql = "SELECT p.*, c.nombre as cliente_nombre, c.razon_social 
+                FROM pedido p
+                JOIN cliente c ON p.id_cliente = c.id_cliente
+                WHERE 1=1";
+        
+        if ($estado) $sql .= " AND p.estado = '$estado'";
+        if ($fecha) $sql .= " AND DATE(p.fecha_entrega) = '$fecha'";
+        
+        $sql .= " ORDER BY p.fecha_entrega DESC, p.fecha_registro DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function actualizarEstado($id_pedido, $estado) {
+        $sql = "UPDATE pedido SET estado = :estado WHERE id_pedido = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([':estado' => $estado, ':id' => $id_pedido]);
+    }
+
+    public function calcularProduccionTotal($fecha, $ventana) {
+        $sql = "SELECT pr.nombre, SUM(pp.cantidad) as cantidad_total
+                FROM pedido_producto pp
+                JOIN pedido p ON pp.id_pedido = p.id_pedido
+                JOIN producto pr ON pp.id_producto = pr.id_producto
+                WHERE p.fecha_entrega = :fecha 
+                  AND p.ventana_entrega = :ventana
+                  AND p.estado != 'CANCELADO'
+                GROUP BY pr.id_producto, pr.nombre
+                ORDER BY pr.nombre ASC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':fecha' => $fecha, ':ventana' => $ventana]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // CORRECCIÓN: Traer datos completos del cliente y dirección
+    public function obtenerPorId($id_pedido) {
+        $query = "SELECT 
+                    p.*, 
+                    s.nombre as sede_nombre, 
+                    d.calle, d.numero, d.referencia, dist.nombre as distrito_nombre,
+                    -- DATOS DEL CLIENTE (Agregados para solucionar el error)
+                    c.nombre as cliente_nombre,
+                    c.apellidos as cliente_apellidos,
+                    c.email,
+                    c.telefono,
+                    c.ruc as cliente_ruc,
+                    c.razon_social
+                  FROM pedido p 
+                  JOIN cliente c ON p.id_cliente = c.id_cliente -- JOIN CRÍTICO
+                  JOIN sede s ON p.id_sede = s.id_sede
+                  LEFT JOIN direccion d ON p.id_direccion_entrega = d.id_direccion
+                  LEFT JOIN distrito dist ON d.id_distrito = dist.id_distrito
+                  WHERE p.id_pedido = :id_pedido";
+        
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_pedido', $id_pedido);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // NUEVA FUNCIONALIDAD: Eliminar Pedido
+    public function eliminar($id_pedido) {
+        $query = "DELETE FROM pedido WHERE id_pedido = :id_pedido";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_pedido', $id_pedido);
+        return $stmt->execute();
+    }
+    
+    // NUEVA FUNCIONALIDAD: Actualizar datos del pedido (Admin)
+    public function actualizarDatosAdmin($id_pedido, $estado, $fecha_entrega, $ventana_entrega) {
+        $query = "UPDATE pedido SET 
+                  estado = :estado, 
+                  fecha_entrega = :fecha,
+                  ventana_entrega = :ventana 
+                  WHERE id_pedido = :id";
+                  
+        $stmt = $this->conn->prepare($query);
+        return $stmt->execute([
+            ':estado'  => $estado,
+            ':fecha'   => $fecha_entrega,
+            ':ventana' => $ventana_entrega,
+            ':id'      => $id_pedido
+        ]);
     }
 }
 ?>

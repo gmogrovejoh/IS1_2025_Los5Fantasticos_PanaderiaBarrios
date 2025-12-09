@@ -165,5 +165,63 @@ class Cliente {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Actualizar cliente desde el panel de Admin
+    public function actualizarPorAdmin($id, $datos) {
+        $query = "UPDATE cliente SET 
+                nombre = :nombre, 
+                apellidos = :apellidos, 
+                email = :email, 
+                telefono = :telefono, 
+                ruc = :ruc, 
+                razon_social = :razon_social,
+                rol = :rol
+                WHERE id_cliente = :id";
+        
+        $stmt = $this->conn->prepare($query);
+        $datos['id'] = $id;
+        
+        try {
+            return $stmt->execute($datos);
+        } catch (PDOException $e) {
+            // Si el email ya existe, dará error
+            return false;
+        }
+    }
+
+    // Eliminar cliente (La BD borrará en cascada pedidos y carritos gracias a las FK)
+    public function eliminar($id) {
+        $query = "DELETE FROM cliente WHERE id_cliente = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id);
+        return $stmt->execute();
+    }
+
+    public function crearPorAdmin($datos) {
+        $query = "INSERT INTO cliente (nombre, apellidos, email, telefono, ruc, razon_social, rol, contrasenia) 
+                  VALUES (:nombre, :apellidos, :email, :telefono, :ruc, :razon_social, :rol, :pass)";
+        
+        // Contraseña por defecto: 123456
+        $passHash = password_hash('123456', PASSWORD_DEFAULT);
+        
+        $stmt = $this->conn->prepare($query);
+        $res = $stmt->execute([
+            ':nombre' => $datos['nombre'],
+            ':apellidos' => $datos['apellidos'],
+            ':email' => $datos['email'],
+            ':telefono' => $datos['telefono'],
+            ':ruc' => $datos['ruc'],
+            ':razon_social' => $datos['razon_social'],
+            ':rol' => $datos['rol'],
+            ':pass' => $passHash
+        ]);
+
+        if ($res) {
+            $id = $this->conn->lastInsertId();
+            $this->crearCarrito($id); // Crear carrito automáticamente
+            return $id;
+        }
+        return false;
+    }
 }
 ?>

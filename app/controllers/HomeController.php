@@ -3,14 +3,13 @@
 class HomeController extends Controller {
     public function index() {
         if ($this->isLoggedIn()) {
-            // Redirigir según el rol del usuario
             switch ($_SESSION['usuario_rol']) {
-                case 'CLIENTE_ESTANDAR':
-                    $this->redirect('cliente/catalogo');
-                    break;
                 case 'MAYORISTA_BOLETA':
                 case 'EMPRESA_FACTURA':
-                    $this->redirect('cliente/dashboard');
+                    $this->redirect('cliente/pedidoRapido');
+                    break;
+                case 'ADMIN':
+                    $this->redirect('admin/');
                     break;
                 default:
                     $this->redirect('auth/login');

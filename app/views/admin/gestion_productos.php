@@ -1,147 +1,171 @@
 <?php include '../app/views/layouts/header.php'; ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="fas fa-box me-2"></i>Gestión de Productos</h2>
-    <a href="<?php echo BASE_URL; ?>admin" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-2"></i>Volver al Dashboard
-    </a>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-bread-slice me-2"></i>Inventario de Productos</h2>
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProducto" onclick="limpiarModal()">
+            <i class="fas fa-plus me-2"></i>Nuevo Producto
+        </button>
+    </div>
+
+    <?php if (isset($data['success'])): ?>
+        <div class="alert alert-success"><?= $data['success'] ?></div>
+    <?php endif; ?>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-dark" style="color:#000">
+                <tr>
+                    <th>Foto</th>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Regla B2B</th>
+                    <th>Mínimo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($data['productos'] as $p): ?>
+                <tr>
+                    <td>
+                        <?php if ($p['foto']): ?>
+                            <img src="<?= BASE_URL ?>public/img/<?= $p['foto'] ?>" style="width: 50px; height: 50px; object-fit: cover;" class="rounded">
+                        <?php else: ?>
+                            <span class="text-muted"><i class="fas fa-image"></i></span>
+                        <?php endif; ?>
+                    </td>
+                    <td><?= $p['nombre'] ?></td>
+                    <td><?= $p['categoria_nombre'] ?></td>
+                    <td>
+                        <?php if($p['unidades_base_b2b'] > 0): ?>
+                            <?= $p['unidades_base_b2b'] ?>u = S/ <?= $p['soles_base_b2b'] ?>
+                        <?php else: ?>
+                            Precio Unit: S/ <?= $p['precio_b2c'] ?>
+                        <?php endif; ?>
+                    </td>
+                    <td><?= $p['unidad_minima_b2b'] ?></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick='editarProducto(<?= json_encode($p) ?>)'>
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <a href="<?= BASE_URL ?>admin/eliminarProducto/<?= $p['id_producto'] ?>" 
+                           class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar?')">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<?php if (isset($data['success'])): ?>
-<div class="alert alert-success">
-    <i class="fas fa-check-circle me-2"></i><?php echo $data['success']; ?>
-</div>
-<?php endif; ?>
+<!-- MODAL CREAR/EDITAR -->
+<div class="modal fade" id="modalProducto" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST" enctype="multipart/form-data">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitulo">Nuevo Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="accion" id="accion" value="crear">
+                    <input type="hidden" name="id_producto" id="id_producto">
+                    <input type="hidden" name="foto_actual" id="foto_actual">
 
-<div class="row">
-    <div class="col-lg-5">
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-plus me-2"></i>Nuevo Producto</h5>
-            </div>
-            <div class="card-body">
-                <form method="POST">
-                    <input type="hidden">
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Nombre</label>
-                        <input type="text" name="nombre" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Descripción</label>
-                        <textarea name="descripcion" class="form-control" rows="3" required></textarea>
-                    </div>
-                    <!-- <div class="mb-3">
-                        <label class="form-label">Foto (nombre de archivo)</label>
-                        <input type="text" name="foto" class="form-control" placeholder="ej: /images/Bread.jpg">
-                        <small class="text-muted">Coloca la imagen en public/img/</small>
-                    </div>
-                    --> 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Precio B2C (S/)</label>
-                            <input type="number" step="0.01" name="precio_b2c" class="form-control" required>
+                            <label>Nombre</label>
+                            <input type="text" name="nombre" id="nombre" class="form-control" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Categoría</label>
-                            <select name="id_categoria" class="form-control" required>
-                                <option value="">Seleccionar</option>
-                                <option value="1">Panes Salados</option>
-                                <option value="2">Panes Dulces</option>
-                                <option value="3">Panes Integrales</option>
-                                <option value="4">Especiales de Temporada</option>
-                                <option value="5">Pastelería y Repostería</option>
-                                <option value="6">Packs y Ofertas</option>
+                            <label>Categoría</label>
+                            <select name="id_categoria" id="id_categoria" class="form-select" required>
+                                <?php foreach($data['categorias'] as $c): ?>
+                                    <option value="<?= $c['id_categoria'] ?>"><?= $c['nombre'] ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
-                    <div class="border rounded p-3 mb-3">
-                        <h6 class="mb-2"><i class="fas fa-industry me-2"></i>Reglas B2B</h6>
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Unid. base</label>
-                                <input type="number" name="unidades_base_b2b" class="form-control" value="0">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Soles base</label>
-                                <input type="number" step="0.01" name="soles_base_b2b" class="form-control" value="0">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Mínimo (empanadas)</label>
-                                <input type="number" name="unidad_minima_b2b" class="form-control" value="0">
+
+                    <div class="mb-3">
+                        <label>Descripción</label>
+                        <textarea name="descripcion" id="descripcion" class="form-control" rows="2"></textarea>
+                    </div>
+
+                    <div class="row p-3 bg-light border rounded mx-1 mb-3">
+                        <h6 class="text-primary">Configuración de Precios B2B</h6>
+                        <div class="col-md-4 mb-3">
+                            <label>Unidades Base (Ej: 6)</label>
+                            <input type="number" name="unidades_base_b2b" id="unidades_base_b2b" class="form-control" value="0">
+                            <small class="text-muted">Pon 0 si es precio unitario simple</small>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Precio por Base (Ej: 1.00)</label>
+                            <input type="number" step="0.01" name="soles_base_b2b" id="soles_base_b2b" class="form-control" value="0">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label>Precio Unitario (Fallback)</label>
+                            <input type="number" step="0.01" name="precio_b2c" id="precio_b2c" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Venta Mínima (Unidades)</label>
+                            <input type="number" name="unidad_minima_b2b" id="unidad_minima_b2b" class="form-control" value="1">
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center mt-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="disponible_b2b" id="disponible_b2b" checked>
+                                <label class="form-check-label">Disponible para Venta</label>
                             </div>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="disponible_b2c" id="disp_b2c" checked>
-                            <label class="form-check-label" for="disp_b2c">Disponible B2C</label>
-                        </div>
-                        <div class="form-check form-check-inline ms-3">
-                            <input class="form-check-input" type="checkbox" name="disponible_b2b" id="disp_b2b" checked>
-                            <label class="form-check-label" for="disp_b2b">Disponible B2B</label>
-                        </div>
                     </div>
-                    <button type="submit" name="crear_producto" class="btn btn-primary w-100">
-                        <i class="fas fa-save me-2"></i>Crear Producto
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-7">
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-list me-2"></i>Productos Existentes</h5>
-            </div>
-            <div class="card-body">
-                <?php if (empty($data['productos'])): ?>
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>No hay productos registrados.
+
+                    <div class="mb-3">
+                        <label>Imagen del Producto</label>
+                        <input type="file" name="foto" class="form-control" accept="image/*">
                     </div>
-                <?php else: ?>
-                    <div class="table-responsive">
-                        <table class="table table-striped align-middle">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Categoría</th>
-                                    <th>Precio B2C</th>
-                                    <th>Regla B2B</th>
-                                    <th>Canales</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($data['productos'] as $p): ?>
-                                <tr>
-                                    <td>
-                                        <strong><?php echo $p['nombre']; ?></strong><br>
-                                        <small class="text-muted"><?php echo $p['descripcion']; ?></small>
-                                    </td>
-                                    <td><?php echo $p['categoria_nombre']; ?></td>
-                                    <td>S/ <?php echo number_format($p['precio_b2c'], 2); ?></td>
-                                    <td>
-                                        <small>
-                                            <?php 
-                                                if ($p['soles_base_b2b'] && $p['unidades_base_b2b']) {
-                                                    echo "{$p['unidades_base_b2b']} unid = S/ " . number_format($p['soles_base_b2b'], 2);
-                                                } else {
-                                                    echo '-';
-                                                }
-                                            ?>
-                                        </small>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-<?php echo $p['disponible_b2c'] ? 'primary' : 'secondary'; ?>">B2C</span>
-                                        <span class="badge bg-<?php echo $p['disponible_b2b'] ? 'success' : 'secondary'; ?>">B2B</span>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php endif; ?>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<script>
+function limpiarModal() {
+    document.getElementById('modalTitulo').innerText = 'Nuevo Producto';
+    document.getElementById('accion').value = 'crear';
+    document.getElementById('id_producto').value = '';
+    document.getElementById('nombre').value = '';
+    document.getElementById('descripcion').value = '';
+    document.getElementById('precio_b2c').value = '';
+    document.getElementById('unidades_base_b2b').value = '0';
+    document.getElementById('soles_base_b2b').value = '0';
+    document.getElementById('unidad_minima_b2b').value = '1';
+}
+
+function editarProducto(p) {
+    var myModal = new bootstrap.Modal(document.getElementById('modalProducto'));
+    document.getElementById('modalTitulo').innerText = 'Editar Producto';
+    document.getElementById('accion').value = 'editar';
+    document.getElementById('id_producto').value = p.id_producto;
+    document.getElementById('foto_actual').value = p.foto;
+    
+    document.getElementById('nombre').value = p.nombre;
+    document.getElementById('descripcion').value = p.descripcion;
+    document.getElementById('id_categoria').value = p.id_categoria;
+    document.getElementById('precio_b2c').value = p.precio_b2c;
+    document.getElementById('unidades_base_b2b').value = p.unidades_base_b2b;
+    document.getElementById('soles_base_b2b').value = p.soles_base_b2b;
+    document.getElementById('unidad_minima_b2b').value = p.unidad_minima_b2b;
+    document.getElementById('disponible_b2b').checked = (p.disponible_b2b == 1);
+    
+    myModal.show();
+}
+</script>
 
 <?php include '../app/views/layouts/footer.php'; ?>

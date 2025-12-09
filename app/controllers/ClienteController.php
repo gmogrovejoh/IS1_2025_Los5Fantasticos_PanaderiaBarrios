@@ -9,18 +9,6 @@ class ClienteController extends Controller {
         $this->carritoModel = $this->model('Carrito');
     }
 
-    public function catalogo() {
-        // Si alguien intenta entrar aquí, lo mandamos al dashboard B2B
-        $this->redirect('cliente/pedidoRapido');
-    }
-
-    // En la función index() o dashboard():
-    public function dashboard() {
-        $this->requireAuth();
-        // Redirigir directamente al pedido rápido, que es lo más útil para B2B
-        $this->redirect('cliente/pedidoRapido');
-    }
-
     public function pedidoRapido() {
 
         $this->requireRole(['MAYORISTA_BOLETA', 'EMPRESA_FACTURA']);
@@ -32,6 +20,11 @@ class ClienteController extends Controller {
 
     public function carrito() {
         $this->requireAuth();
+
+        if ($_SESSION['usuario_rol'] == 'ADMIN') {
+            $this->redirect('admin/');
+            return;
+        }
         
         // CORRECCIÓN: Cambiamos 'obtenerProductosCarrito' por 'obtenerProductos'
         $productos_carrito = $this->carritoModel->obtenerProductos($_SESSION['usuario_id']);
