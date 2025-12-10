@@ -9,6 +9,14 @@ El sistema busca optimizar los procesos internos de la panadería, como la gesti
 - Lenguaje: PHP/ CSS/ HTML
 ---
 
+## Pagina web
+
+Para poder ingresar a la pagina debe ingresar al siguiente link: https://lavender-meerkat-667046.hostingersite.com/
+Admin(abarriosriv@unjbg.edu.pe contrasenia: asdf).
+Lo mismo con el swagger : https://lavender-meerkat-667046.hostingersite.com/swagger/ 
+
+
+
 ## Equipo de Desarrollo
 Los 5 Fantásticos
 - Integrante 1: Kevin Ernesto Calle Gonzales 2020-119036
