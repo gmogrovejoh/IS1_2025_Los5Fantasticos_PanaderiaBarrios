@@ -16,6 +16,8 @@ Los 5 Fantásticos
 - Integrante 3: Alberto Barrios Rivera 2022-119028
 - Integrante 4: Noemi Esther Chura Mamani 2023-119011
 - Integrante 5: Katherin Neysha Quispe Turpo 2023-119057
+- Integrante 6: Lizeth Hancco Calizaya 2023-119022
+- Integrante 7: Leticia Calderón Calizaya 2021-119006
 
 ## Estrategia de Ramas
 El proyecto utiliza una estrategia básica de control de versiones:
